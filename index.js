@@ -1,6 +1,7 @@
 require("dotenv").config();
 
 const { App } = require("@slack/bolt");
+const axios = require("axios");
 
 const app = new App({
   token: process.env.SLACK_BOT_TOKEN,
@@ -28,6 +29,16 @@ app.command("/uwuify", async ({ command, ack, respond }) => {
     .replaceAll(" w", ' w-w')
     .replaceAll(' h', ' h-h')
   await respond({ text: a});
+});
+
+app.command("/stoic-quote", async ({ command, ack, respond }) => {
+  await ack();
+  try {
+    const response = await axios.get("https://stoic.tekloon.net/stoic-quote");
+    await respond({ text: `${response.data.data.quote}\n  -${response.data.data.author} `});
+  } catch (err) {
+    await respond({ text: "Stoic api failure" });
+  }
 });
 
 (async () => {
