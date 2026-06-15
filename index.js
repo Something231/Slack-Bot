@@ -41,6 +41,17 @@ app.command("/stoic-quote", async ({ command, ack, respond }) => {
   }
 });
 
+app.command("/eight-ball", async ({ command, ack, respond }) => {
+  await ack();
+  try {
+    const response = await axios.get("https://eightballapi.com/api?locale=en");
+    await respond({ text: `${response.data.reading}`});
+  } catch (err) {
+    console.log(response.data);
+    await respond({ text: "Api failure" });
+  }
+});
+
 (async () => {
   await app.start();
   console.log("bot is running!");
